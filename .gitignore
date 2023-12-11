@@ -1,11 +1,6 @@
 venv
 Data/Model1/model1_data_raw.csv
-<<<<<<< HEAD
 Data/Model1/Final/model1_data_raw.csv
 Data/Model1/Old Data
 Results/Model1/Old Results
 Results/Model1/Plots
-=======
-Data/Model1/Old Data
-Results/Model1/Old Results
->>>>>>> origin
