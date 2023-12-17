@@ -1,0 +1,81 @@
+PWD d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup
+INPUT d:/CS Dev/Packages/texlive/2023/texmf.cnf
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/web2c/texmf.cnf
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt
+INPUT d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup/project3_writeup.tex
+OUTPUT project3_writeup.log
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/base/article.cls
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/base/article.cls
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/base/size11.clo
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/base/size11.clo
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/base/size11.clo
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr10.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/geometry/geometry.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/geometry/geometry.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics/keyval.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics/keyval.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/generic/iftex/ifvtex.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/generic/iftex/ifvtex.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/generic/iftex/iftex.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/generic/iftex/iftex.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/setspace/setspace.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/setspace/setspace.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics/graphicx.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics/graphicx.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics/graphics.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics/graphics.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics/trig.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics/trig.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics-def/pdftex.def
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics-def/pdftex.def
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics-def/pdftex.def
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+INPUT ./project3_writeup.aux
+INPUT ./project3_writeup.aux
+INPUT project3_writeup.aux
+OUTPUT project3_writeup.aux
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr17.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr8.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr6.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi12.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi8.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi6.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmr12.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmti10.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/jknappen/ec/tcrm1095.tfm
+OUTPUT project3_writeup.pdf
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
+INPUT project3_writeup.aux
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb
+INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb

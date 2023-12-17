@@ -80,9 +80,63 @@ I have outlined the general pipeline of Model 1 below, along with any crucial st
 
 \subsection{Training Process}
 
+In this section, I shall outline the training process for Model 1, including the input and output features, the model space, the loss function, and the training algorithm we used.
+
 \subsubsection{Input Space}
 
+The data that was collected and represented as input features in our final model are as follows:
+
+\begin{enumerate}
+    \item The bot's current x and y coordinates as two individual integer features \emph{bot\_x} and \emph{bot\_y}
+    \begin{itemize}
+        \item Previously, we naively tried storing this feature as a string of a tuple but realized that separating the coordinates into two numerical features was the only way we could use logistic regression since they must be multiplied by weights
+        \item We also once tried removing the features altogether, but we achieved better accuracy by including them
+    \end{itemize}
+    \item The alien probabilities for all neighboring cells (and the current bot cell) as float32 features. They are in the order: \emph{alien\_up}, \emph{alien\_down}, \emph{alien\_left}, \emph{alien\_right}, \emph{alien\_stay} representing the probabilities of the alien being in the up, down, left, right, and bot cells respectively. We tried several other versions for the alien probabilities, as outlined below:
+    \begin{itemize}
+        \item At first, we included the entire flattened alien probability matrix (which was stored as a dictionary in the simulation), which meant that every individual open cell key within the dictionary was represented by a feature in the form \emph{alien\_[str(key)]} with the probability value stored as a float64 (and later float32). This approach resulted in around 1,219 features (including the others), which caused our data collection phase to take an extremely long time and resulted in an 18 GB CSV dataset!
+        \item Understanding that the professor mentioned a similar approach within office hours and that having as much information as possible could not hurt, we attempted the entire training, testing, and simulation process with this expansive dataset, only to find that the accuracy was still very low. I dove into the simulation results and the calculated weights to resolve this issue (and potentially streamline the process). I realized that a significant problem was the low variance between the values of each feature over all datapoints and a predominance of tiny and zero probabilities. To resolve this, I attempted to filter out and keep only features with variance above a certain threshold (0.01, 0.001, 0.0001, etc.) but did not see a significant change over several training and testing periods.
+        \item As a last resort, I even attempted to use Principal Component Analysis (PCA) for dimensionality reduction by following these steps:
+        \begin{enumerate}
+            \item Standardized data and computed the covariance matrix
+            \item Performed eigenvalue and eigenvector decomposition and sorted eigenvalues in descending order
+            \item Selected the top 10, 100, and 200 eigenvectors (over three different tests)
+            \item Transformed the original dataset based on the projection onto the relevant eigenvectors
+        \end{enumerate}
+        However, I ran into issues with the eigenvector computations due to the low variance in the dataset (all PCs contained 0s for any sub-dataset with over 50,000 datapoints and \emph{k\_components} = 100), and I was not sure how to reflect the projection onto the collected datapoints during the simulation, so we chose to abort the process ultimately
+        \item Finally, looking into the process we utilized in deterministically finding the best next move in Project 2, we decided only to consider the up, down, left, right, and current cells, which also significantly improved the data collection efficiency, reduced the CSV file size and allowed for more datapoints, and increased the overall training and testing accuracy. To account for the low probabilities within the remaining five alien probability features, we normalized them so that they summed up to 1 (unless their sum was 0 before)
+    \end{itemize}
+    \item The crew member probabilities for all neighboring cells (and the current bot cell) as float32 features. They are in the order: \emph{crew\_up}, \emph{crew\_down}, \emph{crew\_left}, \emph{crew\_right} representing the probabilities of the crew member being in the up, down, left, and right cells respectively. All the variations that we tried out for alien probabilities were also applied to the crew probabilities, with a few changes:
+    \begin{itemize}
+        \item We decided to drop the \emph{crew\_stay} column since the crew probability was guaranteed to be 0 for the bot's current cell. We attempted to remove the corresponding \emph{alien\_stay} column as well, but saw no significant improvement in performance or accuracy
+        \item Note that crew member probabilities were typically higher than alien probabilities since the only situations where alien probabilities were high were when the alien was within the detection square sensor, whereas crew probabilities were likely non-zero. Thus, normalizing crew probabilities seemed to have a more significant impact than alien probabilities
+    \end{itemize}
+    \item Per the professor's announcement, we added features reflecting the distance from the bot's neighboring cells to the two cells with the highest alien and crew member probabilities, respectively. Hence, we included ten additional features: \emph{d\_alien\_up}, \emph{d\_alien\_down}, \emph{d\_alien\_left}, \emph{d\_alien\_right}, \emph{d\_alien\_stay}, \emph{d\_crew\_up}, \emph{d\_crew\_down}, \emph{d\_crew\_left}, \emph{d\_crew\_right}, \emph{d\_crew\_stay} stored as float32 values. To collect these features, we had to modify our simulation function slightly and add two new helper functions:
+    \begin{itemize}
+        \item We initially found the key cell with the highest probability for the crew and alien matrices and then calculated the distance from each direction cell to the respective max probability cells (if the direction cell was open). Instead of running BFS every time, we utilized the crew sensor function defined in Project 2 (without actually storing the crew detection results) and saved the \emph{d\_list} for the open direction cell within the \emph{d\_lookup\_table} to make the simulation more efficient 
+        \item To recap, the \emph{d\_lookup\_table} dictionary stores cell tuples as keys and the distances to all other open cells as their respective values in the form of dictionaries. We did this so that the distance dictionary (i.e., \emph{d\_dict}) did not need to be recalculated using BFS every time. Using the crew sensor and updating the \emph{d\_lookup\_table} improved the efficiency of the distance determination process and the entire simulation
+        \item After collecting the distance values for all direction cells from the max alien and crew probability locations, we stored the feature values as $1/$\emph{d\_direction\_cell} if the direction cell was open, and 0 if not
+        \item Since we did not use the actual alien and crew member locations within our calculation process or as features, I am confident that we met the criteria of the project
+    \end{itemize}
+    \item The binary values for whether the bot received a beep or not from the alien sensor and crew sensor as two features: \emph{alien\_detected} and \emph{crew\_detected}
+    \begin{itemize}
+        \item The values for the features are 0 if the corresponding sensors return False and 1 if they return True
+        \item Although these did not make much sense to include at first, removing them caused the accuracy to decrease. This illogical result might have occurred because of the sparsity of the dataset and the model learning from features with more variance, such as these two. We kept the features, however, and have not observed a decrease in accuracy, especially after adding in the new features introduced above
+    \end{itemize}
+\end{enumerate}
+
+Overall, our final Model 1 was trained on 23 distinct features stored as integers and float32 values, as depicted above.
+
 \subsubsection{Output Space}
+
+The output space for Model 1 consisted of the best move made by the bot with a given ship configuration. The only thing that changed was how it was encoded:
+
+\begin{itemize}
+    \item At first we naively tried to store the output value as a string encoding of the tuple cell. In hindsight, this was clearly not the correct technique, since it would have to be predicted from a combination of numerical weights and input vectors
+    \item Then, we tried to encode the output values as integers from 1 to 5, with 1 = up, 2 = down, 3 = left, 4 = right, and 5 = stay in place. This process seemed fine at first, but it had two issues. Firstly, the model might find implicit relationships between two such output values. For example, 1 + 2 = 3, but up + down is not left. I don't even know what that means. Similarly, the model might define a sense of ordinality between the output classes, such as 1 $<$ 2 $<$ 3. These relationships could be dangerous to the training process
+    \item Ultimately, we decided to one-hot-encode the output value as a list with five binary values. In this case, up = [1,0,0,0,0], down = [0,1,0,0,0], left = [0,0,1,0,0], right = [0,0,0,1,0], stay = [0,0,0,0,1]. This conversion allowed us to introduce a linear relationship between all the classes and removed the possibility of unnecessary dependencies. Also, one-hot-encoding allowed us to make the validity mask generation and application process much simpler during the loss and gradient calculation and prediction phases
+    \item Within the CSV itself, the one-hot-encoded output values are stored within double quotes, but the dataset loading process ensures that the output vector is one-dimensional and contains the list of encodings per datapoint
+\end{itemize}
 
 \subsubsection{Model Space}
 
