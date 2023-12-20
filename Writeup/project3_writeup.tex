@@ -140,6 +140,21 @@ The output space for Model 1 consisted of the best move made by the bot with a g
 
 \subsubsection{Model Space}
 
+To map from the input to the output, we considered a multiclass logistic regression model with softmax activation. Essentially, here are the steps followed by the logistic regression model:
+
+\begin{enumerate}
+    \item During training, the model receives an input vector $X_i$, and uses a linear combination of the vector with weights (W) and bias (b) to compute the output $z = X_i \cdot W + b$
+    \item The output is then transformed into probabilities for each class via the softmax function. Essentially, the probability for class with index $i$ given the output value, and the fact that there are 5 classes (up, down, left, right, stay), is computed as such:
+    \begin{itemize}
+        \item softmax($z_j) = \frac{e^{z_j}}{\sum_{i=1}^{5} e^{z_i}}$
+    \end{itemize}
+    This ensures that the probability is distributed over the 5 possible moves
+    \item Bonus:
+    \begin{itemize}
+        \item For our bonus, we used the scikit-learn \emph{LogisticRegression} library to create a multiclass model using a \emph{saga} (Stochastic Average Gradient Augmented) solver due to the extensive training dataset. We used the same dataset as the logistic regression model we built from scratch. We used 1000 iterations in our training, and all the other processes were identical unless noted otherwise
+    \end{itemize}
+\end{enumerate}
+
 \subsubsection{Loss}
 
 \subsubsection{Training Algorithm}
