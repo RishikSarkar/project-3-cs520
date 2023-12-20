@@ -153,7 +153,6 @@ To map from the input to the output, we considered a multiclass logistic regress
     \item Bonus:
     \begin{itemize}
         \item For our bonus, we used the scikit-learn \emph{LogisticRegression} library to create a multiclass model using a \emph{saga} (Stochastic Average Gradient Augmented) solver due to the extensive training dataset. The scikit-learn model also uses the softmax activation function I mentioned earlier and uses L2 regularization to prevent overfitting (which we shall go into more detail about in the next section). We used the same dataset as the logistic regression model we built from scratch. We used 1000 iterations in our training, and all the other processes were identical unless noted otherwise
-        \item Additionally, we used a scikit-learn \emph{StandardScaler} to preprocess the dataset and standardize features automatically by removing the mean and scaling to unit variance
     \end{itemize}
 \end{enumerate}
 
@@ -214,28 +213,28 @@ Here are a few of the loss function plots we generated during training:
 \begin{itemize}
     \item Figure 1 shows the decrease in the loss function using Stochastic Gradient Descent. Notice that the initial loss was very high, and despite decreasing steadily, showed minor improvement in accuracy
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{loss_sgd.png}
-    \caption{Loss Function using SGD}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+    % \includegraphics[width=0.8\linewidth]{loss_sgd.png}
+%     \caption{Loss Function using SGD}
+% \end{figure}
     
     \item Figure 2 shows the problem of using a higher $\alpha$ value of 0.1. The loss function continuously fluctuated due to overstepping the minimum, and the model did not learn
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{loss_highalpha.png}
-    \caption{Loss Function with alpha=0.1}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{loss_highalpha.png}
+%     \caption{Loss Function with alpha=0.1}
+% \end{figure}
     
     \item Figure 3 shows the final loss function we achieved through training Model 1. The loss decreases and gradually becomes asymptotic, indicating that the model was learning over time. Despite the apparent improvement in accuracy and decreased loss, we noticed the loss value was exceptionally low (even though further testing showed no indication of the model memorizing features). We found this very confusing and eventually realized that this was because our feature values were mostly sparse with many 0s, so the model was learning as much as it could, given the data. We tried training the model on the dataset with 1,219 features and the ones after PCA and variance threshold filtering but did not see a difference in the calculated loss. Overall, as we shall depict in the following section, we tested the model's accuracy using trained and random weights and biases and saw that the model learned adequately, so the abnormally low loss value did not affect Model 1 negatively
 \end{itemize}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\linewidth]{loss1.png}
-    \caption{Final Loss Function}
-\end{figure}
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{loss1.png}
+%     \caption{Final Loss Function}
+% \end{figure}
 
 \subsubsection{Testing and Evaluation}
 
@@ -257,18 +256,7 @@ Since 0.707 $>$ 0.494, the maximum random testing accuracy over 100 trials, we c
 
 Now, what about whether the model is overfitting or not? Firstly, we have shown that the training and testing accuracy are virtually identical (with the testing accuracy being slightly higher). This finding indicates that the model has not overfitted the training dataset since it performs just as well on the testing dataset. Since the datasets themselves are quite large, we should be able to confirm that the model does not overfit significantly.
 
-However, what if the model has just memorized the bot location features and often predicts the same output since the board configuration was relatively homogenous over the same simulation trial we used to collect data? To answer this question, we tried generating five other test datasets with randomized board start states (in terms of bot, alien, and crew locations) and got similar accuracy values to the training accuracy we found with the original dataset. For example, one of our testing datasets returned an accuracy of 0.7146513365126948, even higher than the testing accuracy on the original dataset. None of our testing datasets returned a lower accuracy than the training accuracy, indicating that the model was not overfitting much and is reasonably generalizable. \newline
-
-Bonus:
-
-\begin{itemize}
-    \item Using the default predict function provided by scikit-learn's \emph{LogisticRegression} library, we found the training and testing accuracies to be:
-    \begin{itemize}
-        \item Training Accuracy: 0.7115707553965387
-        \item Testing Accuracy: 0.7115098957969089
-    \end{itemize}
-    \item Since the training and testing accuracy were approximately the same on large sample sizes, overfitting was likely minimal
-\end{itemize}
+However, what if the model has just memorized the bot location features and often predicts the same output since the board configuration was relatively homogenous over the same simulation trial we used to collect data? To answer this question, we tried generating five other test datasets with randomized board start states (in terms of bot, alien, and crew locations) and got similar accuracy values to the training accuracy we found with the original dataset. For example, one of our testing datasets returned an accuracy of 0.7146513365126948, even higher than the testing accuracy on the original dataset. None of our testing datasets returned a lower accuracy than the training accuracy, indicating that the model was not overfitting much and is reasonably generalizable.
 
 \subsubsection{Bot1 vs. Mimic-Bot1}
 
@@ -284,14 +272,180 @@ In this section, we will talk about some specific setups of the Mimic-Bot1 simul
         \item Mimic-Bot1: Bot1: {Average Rescue Moves: [1768.05]}, {Probability of Crew Rescue: [0.42]}, {Average Crew Saved: [8.4]}
     \end{itemize}
     \item These results suggest that, on average, Bot1 performed significantly better than Mimic-Bot1, but Model 1's predictions weren't completely useless. The large average number of required moves for rescues directly affected the loops that the mimic bot often found itself in, which weren't wholly mitigated despite the addition of stochasticity. Mimic-Bot1 was limited in performance to Bot1's capability since Model1 was trained on simulations using Bot1 itself. Overall, Mimic-Bot1 displayed the ability to traverse the ship effectively and rescue crew members while avoiding aliens, albeit not as well as its deterministic counterpart
-    \item Bonus:
-    \begin{itemize}
-        \item Our scikit-learn \emph{LogisticRegression} Model 1 performed similarly to the Model 1 from scratch against its deterministic counterpart. To include stochasticity in move prediction, to account for cycles, we used the \emph{predict\_proba()} function to retrieve probabilities, then returned a random valid probability class with p=0.2 and the highest valid probability class with p=0.8.
-    \end{itemize}
 \end{itemize}
-
 \section{Model 2}
 
+Similar to the last section, this section goes over the training and testing of Model 2, which is used to predict the bot's performance by determining the probability that the bot will successfully rescue the human. The initial subsection details the general pipeline of Model 2, while the subsequent subsections explain the training and testing processes, respectively. Lastly, the model's efficacy will be discussed through the relevant results.
+
+\subsection{Model 2 Pipeline}
+
+The major components of the Model 2 pipeline are described below:
+
+\begin{enumerate}
+    \item Import relevant packages and run the \emph{Bot1.ipynb} notebook to gain access to all the setup functions used for Bot 1 in Project 2. 
+    This allowed to set up our simulations. More specifically, we got access to the 30x30 grid, randomly placed the bot, alien, and crew member, and initialized the alien and crew probabilities appropriately. 
+    Using these elements, the bot would be able to deterministically determine the next move for the bot, which we would use for data.  
+    Like Model 1, it is important to note that we fixed the ship's layout in terms of the default blocked and open cells, meaning only the bot, alien, and crew positions changed throughout simulations. 
+    \item Simulate Bot 1 similarly to how it was done in Project 2, but collect relevant feature and output vectors to save in a Pandas dataframe (and eventually store as \emph{model2\_data\_raw.csv}) to be used in training Model 2. 
+    \begin{enumerate}
+        \item To collect data for this model, we ran 3000 bots where each run ended until the bot saved the crew member or got captured by the alien. More specifically, this was broken into 30 iterations per simulation and 100 simulations. 
+         \item From this, we collected a total of 2,952,477 data points. 
+         \item For all simulations, the values for the parameters were alpha = 0.004 and k = 3.
+         \item The average results from the data collection for Model 2 were similar to the metric results for the simulations for Model 1. 
+    \end{enumerate}
+    \item Preprocess the data and create training data and testing data splits using the input matrix X and output vector y. Note that the validity mask was unnecessary here as the output space differed. The following steps were taken:
+        \begin{enumerate}
+        \item Read data from the model2\_data\_raw.csv file and ensure that the shape and structure of the data is as expected. 
+        \item Remove duplicate rows/entries from the input matrix X to handle redundancy. Like with Model 1, this step helps to make sure that the model does not become biased by overfitting to the entries that are occurring the most in the data. After this step, the number of data points was reduced to 700,019. 
+        \item Modify the feature vectors to ensure that it captures the input information as intended. For this model, no such changes were implemented as we were confident in the current state of the feature vectors.
+        \item Partition the data into the input matrix \textit{model2df} and an output vector. From the original data matrix, the output is the last column, and the rest of the columns are the input matrix. In other words, the output vector corresponds to the binary label of whether the bot was successful in rescuing the crew, and the input matrix consists of the other features collected. 
+        \item Create training and test matrices by doing an 80/20 split of the \textit{model2df} matrix. For this model, it is important to note that data imbalance was a legitimate concern, given that there was potential for the input data to have a large number of data points that were successes (bot rescued the crew member). To remedy this, we attempted different approaches that I will explain further in the input space section. 
+        \end{enumerate}
+        \item Train the logistic regression model using the input matrix and input vector (X.train + y.train). Each time, keep track of the updated W and b values. The hyperparameters used in the final training of Model 2 are as follows: 
+        \begin{enumerate}
+            \item alpha (learning rate) = 0.005
+            \begin{itemize}
+                \item We tried 0.01 and 0.001, but 0.005 seemed to be the best. In our observations, 0.005 ensured the model did not get stuck at a local minimum quickly and that the model was learning, which was observed by looking at the loss. 
+            \end{itemize}
+            \item epochs = 50
+            \begin{itemize}
+                \item 50 proved to be an ideal number for the number of epochs so that the loss decreased incrementally till it became asymptotic. 
+            \end{itemize}
+        \end{enumerate}
+        \item Test Model 2 on the testing data set with the updated W and b values and calculate the accuracy of correctly predicting whether the bot successfully rescues the crew. 
+        \begin{itemize}
+        \item Similar to model 1, we confirmed that the model was truly learning by using randomized weights and biases and averaging the results over 100 calculations. There was a significant improvement in training and testing accuracy using the trained weights over the random weights.  
+        \end{itemize}
+    
+\end{enumerate}
+
+\subsection{Training Process}
+This section covers the training process for Model 2, including the input and output features, the model space, the loss function, and the training algorithm we used.
+
+\subsubsection{Input Space}
+The input features used for our data can be described as follows: 
+\begin{enumerate}
+\item Similar to Model 1, the bot's current x and y coordinates are represented as two individual integer features \textit{bot\_x} and \textit{bot\_y}. 
+\item The alien probabilities, or the probability of an alien being present, for all surrounding cells and the current cell that the bot is in. Particularly, they are denoted as \textit{alien\_up}, \textit{alien\_down}, \textit{alien\_left}, \textit{alien\_right}, and \textit{alien\_stay}. Similar to Model 1, we attempted to use a different feature representation of this information. 
+\begin{itemize}
+    \item The approach of using the complete alien probability matrix after flattening it slowed down our data collection phase. As mentioned, this resulted in around 1200 features. However, most importantly, we did not see a significant increase in the accuracy of the model, even after filtering data according to variance and utilizing PCA in attempt to reduce the dimensionality to a reasonable size. This led us to abandon this approach. 
+\end{itemize}
+\item Similar to the alien probabilities, the crew member probabilities for the bot's cell and surrounding cells were used as input features. They were labelled as \textit{crew\_up}, \textit{crew\_down}, \textit{crew\_left}, \textit{crew\_right}, and \textit{crew\_stay}. 
+\begin{itemize}
+    \item It is important to note that \textit{crew\_stay} was kept as a feature as it was helpful in streamlining the data collection process. Most importantly, we confirmed by checking that removing it did not affect the accuracy of the model almost at all. 
+    \item Similar to Model 1, normalizing the crew probabilities allowed this feature to be more impactful because without doing this, the crew probabilities often had non-zero values.  
+\end{itemize}
+\item Two features represented the result of running the alien and crew detectors. Labeled as \textit{alien\_detected} and \textit{crew\_detected}, these features consisted of binary values indicating whether a crew beep or alien beep was heard, respectively. 
+\begin{itemize}
+    \item Similar to Model 1, removing these features saw a decrease in accuracy due to the possible reason of the data being too sparse. Including these features helped with the handling the existing variance in the data. 
+\end{itemize}
+
+\item Overall, our final Model 2 was trained on 14 distinct features stored as integers and float32 values, as depicted above. 
+\end{enumerate}
+\subsubsection{Data Imbalance}
+Upon initial inspection of the input data we collected, it was evident that there was an imbalance in the number of data points for each of the two classes. As mentioned, one class represents that the bot was successful in rescuing the crew, and the other class represents the bot failing in this regard. There seemed to be many more data points that corresponded to the bot being successful, almost twice as many points than the other class. To remedy this, we tried two different approaches. 
+\begin{enumerate}
+    \item The first approach was to account for this imbalance directly when creating the training and test splits. Since the class 0 or unsuccessful was the class with the smaller number of points, we created a training matrix by concatenating all data points in the original matrix that had an output value of 0 with 50\% of the data points that had 1 as the output value. Given the breakdown of the data points by class in the original matrix, this approach yielded a final training matrix that was around 80\% in size of the original data matrix. We then randomly sampled 20\% of the original data matrix to create the test matrix and complete the 80/20 split. However, this approach saw a significant decrease in accuracy compared to when using the other approach. Specifically, we saw about a 33\% decrease in accuracy in comparison. Initially, we thought this could be because the size of the training set was not big enough to learn the weights meaningfully. However, even after collecting more data, we observed a similar reduced accuracy. As a result, we chose to abandon this approach. 
+    \item The approach we ended up utilizing was assigning weights to each class. The weights would essentially account for the varied distribution of data between the classes when the model is learning from the training data. A higher weight for the smaller class, which was the unsuccessful class in this case, would allow the model to learn to classify the class better by penalizing wrong classifications proportionately. We calculated the weights using the following formula: 
+    \begin{itemize}
+        \item $w_j = \frac{\emph{number of samples for total}}{\emph{number of samples for classes} * \emph{number of samples for class j}} $
+    \end{itemize}
+    Specifically, we used a weight of 1.556 for class unsuccessful and 0.737 for class successful. After this modification, we confirmed that the model was learning through analysis of the loss and accuracy.  
+\end{enumerate}
+\subsubsection{Output Space}
+The output space for Model 2 consisted of a binary value that indicated whether the state of the bot that was represented through the 14 input features was part of a successful bot run or not. In other words, a 1 meant that this state of the bot was part of a run where the bot rescued the crew, while a 0 meant that this state was part of a run where the bot got captured. 
+\begin{itemize}
+    \item It is important to note that this approach streamlined the process of collecting input data as each iteration of the bot during a single run could be used as a data point. By doing this, we did not have to run as many simulations of the bot. 
+    \item At the same time, this also introduced the effect of redundant data points as the bot often was at a same state between different simulations. As mentioned, this was handled by removing duplicates from the input data. 
+\end{itemize}
+\subsubsection{Model Space}
+To map from the input to the output, we considered a binary logistic regression with sigmoid activation. The steps we followed for the logistic regression model is as follows: 
+\begin{enumerate}
+    \item During training, the model receives an input vector $X_i$, and uses a linear combination of the vector with weights (W) and bias (b) to compute the output $z = X_i \cdot W + b$. 
+    \item The output is then transformed into probabilities for each class via the sigmoid function. It is important to note that there are two classes implicitly, although explicitly only one class is indicated since the probability for the other class can be computed from it. 
+    \begin{itemize}
+        \item sigmoid($z_j$) = $\frac{1}{1 + e^{-z_j}}$
+    \end{itemize}
+    This ensures that the probability is distributed over the 2 classes. 
+    \item Bonus:
+    \begin{itemize}
+        \item For our bonus, we used the scikit-learn \emph{LogisticRegression} library to create a binary model using a \emph{lbfgs} (Limited-memory Broyden-Fletcher-Goldfarb-Shanno) solver due to the extensive training dataset. The scikit-learn model also uses the sigmoid activation function I mentioned earlier and uses L2 regularization. We used the same dataset as the logistic regression model we built from scratch. All the other processes were identical.
+    \end{itemize}
+\end{enumerate}
+\subsubsection{Loss}
+As a binary classification model, Model 2 uses a cross-entropy loss function that measures the difference between the true and predicted probability distributions for the classes as follows: 
+\begin{enumerate}
+    \item As parameters, we input the predicted classification of whether the bot was successful or not and the true classification of successful and unsuccessful. 
+    \item As mentioned, a validity mask was not necessary here like it was for Model 1. It is important to note that the predicted probability vector $\hat{y}$ is already normalized for the probability distributions for each data point. 
+    \item After that, the cross entropy loss is calculated for each data point using the true output vector \emph{y}, predicted output vector  $\hat{y}$, and class weights. 
+    \begin{itemize}
+        \item $L(y, \hat{y}) = - \Sigma_{i=1}^{2} w \cdot y_i \cdot log(\hat{y_i} + \epsilon)$
+        \item In this case, $\epsilon$ refers to a small constant (1e-15) to ensure that log(0) is not being calculated, and $L(y,\hat{y})$ is the loss for that particular datapoint. 
+        \item It is important to mention again that the two classes were explicitly represented rather than one class where the other class can be explicitly calculated. Hence, the summation to i = 2. 
+        \item Additionally, we modified the output vector into a hot encoding representation to represent two classes. For example, if the output vector was 1, the modified representation was 0 1. 
+    \end{itemize}
+    \item Lastly, the sum of the losses for each data point is averaged by dividing by the number of data points (n). 
+    \item Bonus:
+    \begin{itemize}
+        \item Like with Bonus for Model 1, we did not define the loss function explicitly since we used the default scikit-learn \emph{LogisticRegression} library. Since we used L2 regularization, the understanding is that a penalty is added to the loss function equal to the sum of the squared values of the calculated weights with a specific regularization strength.
+    \end{itemize}
+\end{enumerate}
+\subsubsection{Training Function}
+Like Model 1, the training function uses gradient descent to minimize the cross-entropy loss function. The algorithm iteratively updates the class weights and biases to yield the lowest possible loss value by doing the following: 
+\begin{enumerate}
+    \item As parameters, we plugged in the true vector y, predicted output vector $\hat{y}$, and the input matrix X. Note the weights were included internally in the function. 
+    \item We calculated the gradient of the loss function with respect to the weights W and bias b as follows:
+    \begin{itemize}
+        \item $\nabla_{W} L = \frac{1}{n} X^{T} \cdot ((\hat{y} - y) \cdot w)$
+        \item $\nabla_{b} L = \frac{1}{n} \Sigma_{i=1}^{n} ((\hat{y_i} - y_i) \cdot w)$
+    \end{itemize}
+    Here, $X$ is the input matrix of size $n \times m$, and $\hat{y}$ and $y$ are the predicted and true output vectors of size $n \times 2$ (since there are 2 classes in the one-hot-encoding). $L$ is the loss function that was calculated before
+    \item The gradient of the loss function with respect to $W$ and and $b$ is then used to update the weights and bias in the following way:
+    \begin{itemize}
+        \item $W = W - \alpha \cdot \nabla_{W} L$
+        \item $b = b - \alpha \cdot \nabla_{b} L$
+    \end{itemize}
+    As mentioned, $\alpha$ (0.005) is the training algorithm's learning rate. We found that higher learning rates caused the loss to oscillate, while smaller learning rates rendered the model to be significantly slow in learning.  The former could have because the model was possibly overstepping. 
+    \item This algorithm was used in each iteration or epoch to train the model on the entire dataset. Like Model 1, we tried out stochastic gradient descent here as well. However, we observed that the loss function decreased more steadily by utilizing full-batch gradient descent. Overall, we finally trained Model 1 for 50 epochs, which allowed the loss to decrease and eventually become asymptotic. 
+    \item Bonus:
+    \begin{itemize}
+        \item Once again, we did not explicitly define the training function since we used the default scikit-learn \emph{LogisticRegression} library. We utilized \emph{lbfgs}, or Limited-memory Broyden-Fletcher-Goldfarb-Shanno, which uses a similar process but is much more memory-efficient as it is geared for extensive data sets. 
+    \end{itemize}
+\subsection{Testing Process and Results}
+This section is an analysis of the testing process we used and the simulation results we got. 
+\subsubsection{Results}
+These were some of the plots that were generated when analyzing the loss function while the model was being trained. 
+\begin{itemize}
+\item Figure 1 shows the change in the loss function when the $\alpha$ value was relatively high. Specifically, the $\alpha$ values were 0.01 and 0.05. Both values resulted in a plot like this. After the first 10 epochs, the loss oscillates between values around 5 and values around 0. As mentioned, this could be due to the model overstepping and missing the local maxima.  
+        \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\linewidth]{loss_m2highalpha.png}
+        \caption{Loss Function using $\alpha = 0.01$}
+        \end{figure}
+       
+    \item Figure 2 shows the final loss function we achieved through training Model 2. As mentioned, the number of epochs was 50, and $\alpha$ was 0.005. The loss decreased at a relatively greater rate in the early epochs before decreasing gradually after around 15 epochs. Eventually, the loss became asymptotic. Evidently, this suggests that the model was learning. We confirmed this suggestion by testing the accuracy of the model. 
+         \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\linewidth]{loss_m2final.png}
+        \caption{Final Loss Function}
+        \end{figure}
+\end{itemize}
+\subsubsection{Testing and Evaluation}
+After training the model on 50 epochs and observing the decrease in the loss to an asymptotic level, we tested Model 2 on the training and test datasets containing 560,015 and 140,003 data points, respectively. It is important to note that in this process, the predicted result of either successful or unsuccessful was determined as the class with the maximum probability:
+\begin{itemize}
+    \item Training Accuracy: 0.6786282510289903
+    \item Testing Accuracy: 0.6805640221995243
+\end{itemize}
+
+To ensure that the model had learned and was not randomly predicting output, we compared the model to the testing accuracy determined using random weights and bias vectors, similar to how Model 1 was checked. Specifically, we looked at the maximum and minimum testing accuracy over 100 randomly generated weights and biases.  
+\begin{itemize}
+    \item Maximum Testing Accuracy: 0.5007205164147389
+    \item Minimum Testing Accuracy: 0.3210324064484332
+\end{itemize}
+Since the model's testing accuracy is significantly higher in comparison, it can be evaluated that the model has learned optimal weights and bias. 
+
+The result of the testing accuracy of the model being close to the training accuracy shows that the model is not overfitting. To confirm that the bot is not memorizing features and just providing the same output, we ran this model for other test data sets that corresponded with different board start states, like with Model 1. We checked with around 5 different test data sets. For 3 out of the 5 test data sets, the testing accuracy was around the same as the testing accuracy recorded for the original test data set. This leads to the conclusion that the bot is not overfitting and is reasonably capable of learning optimal weights and bias. 
+\end{enumerate}
 % \subsection{Input}
 
 % \subsection{Model}
