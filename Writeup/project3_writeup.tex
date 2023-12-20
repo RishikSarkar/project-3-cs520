@@ -153,6 +153,7 @@ To map from the input to the output, we considered a multiclass logistic regress
     \item Bonus:
     \begin{itemize}
         \item For our bonus, we used the scikit-learn \emph{LogisticRegression} library to create a multiclass model using a \emph{saga} (Stochastic Average Gradient Augmented) solver due to the extensive training dataset. The scikit-learn model also uses the softmax activation function I mentioned earlier and uses L2 regularization to prevent overfitting (which we shall go into more detail about in the next section). We used the same dataset as the logistic regression model we built from scratch. We used 1000 iterations in our training, and all the other processes were identical unless noted otherwise
+        \item Additionally, we used a scikit-learn \emph{StandardScaler} to preprocess the dataset and standardize features automatically by removing the mean and scaling to unit variance
     \end{itemize}
 \end{enumerate}
 
@@ -213,28 +214,28 @@ Here are a few of the loss function plots we generated during training:
 \begin{itemize}
     \item Figure 1 shows the decrease in the loss function using Stochastic Gradient Descent. Notice that the initial loss was very high, and despite decreasing steadily, showed minor improvement in accuracy
 
-% \begin{figure}[H]
-%     \centering
-    % \includegraphics[width=0.8\linewidth]{loss_sgd.png}
-%     \caption{Loss Function using SGD}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{loss_sgd.png}
+    \caption{Loss Function using SGD}
+\end{figure}
     
     \item Figure 2 shows the problem of using a higher $\alpha$ value of 0.1. The loss function continuously fluctuated due to overstepping the minimum, and the model did not learn
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\linewidth]{loss_highalpha.png}
-%     \caption{Loss Function with alpha=0.1}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{loss_highalpha.png}
+    \caption{Loss Function with alpha=0.1}
+\end{figure}
     
     \item Figure 3 shows the final loss function we achieved through training Model 1. The loss decreases and gradually becomes asymptotic, indicating that the model was learning over time. Despite the apparent improvement in accuracy and decreased loss, we noticed the loss value was exceptionally low (even though further testing showed no indication of the model memorizing features). We found this very confusing and eventually realized that this was because our feature values were mostly sparse with many 0s, so the model was learning as much as it could, given the data. We tried training the model on the dataset with 1,219 features and the ones after PCA and variance threshold filtering but did not see a difference in the calculated loss. Overall, as we shall depict in the following section, we tested the model's accuracy using trained and random weights and biases and saw that the model learned adequately, so the abnormally low loss value did not affect Model 1 negatively
 \end{itemize}
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\linewidth]{loss1.png}
-%     \caption{Final Loss Function}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{loss1.png}
+    \caption{Final Loss Function}
+\end{figure}
 
 \subsubsection{Testing and Evaluation}
 
@@ -256,7 +257,18 @@ Since 0.707 $>$ 0.494, the maximum random testing accuracy over 100 trials, we c
 
 Now, what about whether the model is overfitting or not? Firstly, we have shown that the training and testing accuracy are virtually identical (with the testing accuracy being slightly higher). This finding indicates that the model has not overfitted the training dataset since it performs just as well on the testing dataset. Since the datasets themselves are quite large, we should be able to confirm that the model does not overfit significantly.
 
-However, what if the model has just memorized the bot location features and often predicts the same output since the board configuration was relatively homogenous over the same simulation trial we used to collect data? To answer this question, we tried generating five other test datasets with randomized board start states (in terms of bot, alien, and crew locations) and got similar accuracy values to the training accuracy we found with the original dataset. For example, one of our testing datasets returned an accuracy of 0.7146513365126948, even higher than the testing accuracy on the original dataset. None of our testing datasets returned a lower accuracy than the training accuracy, indicating that the model was not overfitting much and is reasonably generalizable.
+However, what if the model has just memorized the bot location features and often predicts the same output since the board configuration was relatively homogenous over the same simulation trial we used to collect data? To answer this question, we tried generating five other test datasets with randomized board start states (in terms of bot, alien, and crew locations) and got similar accuracy values to the training accuracy we found with the original dataset. For example, one of our testing datasets returned an accuracy of 0.7146513365126948, even higher than the testing accuracy on the original dataset. None of our testing datasets returned a lower accuracy than the training accuracy, indicating that the model was not overfitting much and is reasonably generalizable. \newline
+
+Bonus:
+
+\begin{itemize}
+    \item Using the default predict function provided by scikit-learn's \emph{LogisticRegression} library, we found the training and testing accuracies to be:
+    \begin{itemize}
+        \item Training Accuracy: 0.7115707553965387
+        \item Testing Accuracy: 0.7115098957969089
+    \end{itemize}
+    \item Since the training and testing accuracy were approximately the same on large sample sizes, overfitting was likely minimal
+\end{itemize}
 
 \subsubsection{Bot1 vs. Mimic-Bot1}
 
@@ -272,6 +284,10 @@ In this section, we will talk about some specific setups of the Mimic-Bot1 simul
         \item Mimic-Bot1: Bot1: {Average Rescue Moves: [1768.05]}, {Probability of Crew Rescue: [0.42]}, {Average Crew Saved: [8.4]}
     \end{itemize}
     \item These results suggest that, on average, Bot1 performed significantly better than Mimic-Bot1, but Model 1's predictions weren't completely useless. The large average number of required moves for rescues directly affected the loops that the mimic bot often found itself in, which weren't wholly mitigated despite the addition of stochasticity. Mimic-Bot1 was limited in performance to Bot1's capability since Model1 was trained on simulations using Bot1 itself. Overall, Mimic-Bot1 displayed the ability to traverse the ship effectively and rescue crew members while avoiding aliens, albeit not as well as its deterministic counterpart
+    \item Bonus:
+    \begin{itemize}
+        \item Our scikit-learn \emph{LogisticRegression} Model 1 performed similarly to the Model 1 from scratch against its deterministic counterpart. To include stochasticity in move prediction, to account for cycles, we used the \emph{predict\_proba()} function to retrieve probabilities, then returned a random valid probability class with p=0.2 and the highest valid probability class with p=0.8.
+    \end{itemize}
 \end{itemize}
 
 \section{Model 2}

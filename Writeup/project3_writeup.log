@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.11)  20 DEC 2023 05:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.11)  20 DEC 2023 16:02
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -160,25 +160,48 @@ Overfull \hbox (6.62094pt too wide) in paragraph at lines 115--116
 \OT1/cmr/m/it/10.95 d[]alien[]right\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]alien[]stay\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]up\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]down\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]left\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]right\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]stay \OT1/cmr/m/n/10.95 stored
  []
 
-[5] [6] [7] [8] [9] [10] [11] [12] (./project3_writeup.aux)
+[5] [6] [7] [8]
+<loss_sgd.png, id=42, 722.7pt x 433.62pt>
+File: loss_sgd.png Graphic file (type png)
+<use loss_sgd.png>
+Package pdftex.def Info: loss_sgd.png  used on input line 219.
+(pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
+ [9]
+<loss_highalpha.png, id=47, 722.7pt x 433.62pt>
+File: loss_highalpha.png Graphic file (type png)
+<use loss_highalpha.png>
+Package pdftex.def Info: loss_highalpha.png  used on input line 227.
+(pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
+ [10 <./loss_sgd.png> <./loss_highalpha.png>]
+<loss1.png, id=53, 722.7pt x 433.62pt>
+File: loss1.png Graphic file (type png)
+<use loss1.png>
+Package pdftex.def Info: loss1.png  used on input line 236.
+(pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
+ [11 <./loss1.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 260--261
+
+ []
+
+[12] [13] (./project3_writeup.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-01>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 1980 strings out of 474272
- 32625 string characters out of 5743465
+ 2005 strings out of 474272
+ 33123 string characters out of 5743465
  1934533 words of memory out of 5000000
- 24199 multiletter control sequences out of 15000+600000
+ 24224 multiletter control sequences out of 15000+600000
  563927 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,6n,65p,1105b,329s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on project3_writeup.pdf (12 pages, 198950 bytes).
+Output written on project3_writeup.pdf (13 pages, 297533 bytes).
 PDF statistics:
- 114 PDF objects out of 1000 (max. 8388607)
- 71 compressed objects within 1 object stream
+ 125 PDF objects out of 1000 (max. 8388607)
+ 75 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 16 words of extra memory for PDF output out of 10000 (max. 10000000)
 

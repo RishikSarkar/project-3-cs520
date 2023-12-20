@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1703068162 "d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup/project3_writeup.tex" "project3_writeup.pdf" "project3_writeup" 1703068163 0
+["pdflatex"] 1703106151 "d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup/project3_writeup.tex" "project3_writeup.pdf" "project3_writeup" 1703106152 0
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1699688499 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1699689074 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/jknappen/ec/tcrm1095.tfm" 1699688820 1536 02c06700a42be0f5a28664c7273f82e7 ""
@@ -53,9 +53,12 @@
   "d:/CS Dev/Packages/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1699691616 4753735 ec3f831be28f471f9c211b19e3cca41d ""
   "d:/CS Dev/Packages/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1699691744 8213354 5b3587a66de0726c18c5608e79b0edf2 ""
   "d:/CS Dev/Packages/texlive/2023/texmf.cnf" 1699691595 713 e69b156964470283e0530f5060668171 ""
-  "d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup/project3_writeup.tex" 1703068163 34267 3474ae5b99abe50b4bd3f53c88a75e75 ""
-  "project3_writeup.aux" 1703068163 1548 feaffaa37fc1cd62381bd5061d3b5e07 "pdflatex"
-  "project3_writeup.tex" 1703068163 34267 3474ae5b99abe50b4bd3f53c88a75e75 ""
+  "d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup/project3_writeup.tex" 1703106150 35378 289790b923744887deb8d179fb3ae9ae ""
+  "loss1.png" 1703106115 30163 e37f3979fa7391d9521420fba0ffa2dd ""
+  "loss_highalpha.png" 1703106120 53193 d1ba16001761e2940e1aa5e7bd7f130a ""
+  "loss_sgd.png" 1703106117 21992 6203c527e38c6c1e398835a70a54aef7 ""
+  "project3_writeup.aux" 1703106152 1930 a9ebc746a06f905b7ed1d727d0741d71 "pdflatex"
+  "project3_writeup.tex" 1703106150 35378 289790b923744887deb8d179fb3ae9ae ""
   (generated)
   "project3_writeup.aux"
   "project3_writeup.log"

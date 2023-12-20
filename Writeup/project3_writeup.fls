@@ -70,6 +70,21 @@ INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-sup
 INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm
 INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
 INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/public/cm/cmbx10.tfm
+INPUT ./loss_sgd.png
+INPUT ./loss_sgd.png
+INPUT ./loss_sgd.png
+INPUT ./loss_sgd.png
+INPUT ./loss_sgd.png
+INPUT ./loss_highalpha.png
+INPUT ./loss_highalpha.png
+INPUT ./loss_highalpha.png
+INPUT ./loss_highalpha.png
+INPUT ./loss_highalpha.png
+INPUT ./loss1.png
+INPUT ./loss1.png
+INPUT ./loss1.png
+INPUT ./loss1.png
+INPUT ./loss1.png
 INPUT project3_writeup.aux
 INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 INPUT d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
