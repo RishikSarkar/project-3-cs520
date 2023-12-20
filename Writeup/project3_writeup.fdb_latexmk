@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1703033025 "d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup/project3_writeup.tex" "project3_writeup.pdf" "project3_writeup" 1703033027 0
+["pdflatex"] 1703068162 "d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup/project3_writeup.tex" "project3_writeup.pdf" "project3_writeup" 1703068163 0
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1699688499 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/map/fontname/texfonts.map" 1699689074 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/tfm/jknappen/ec/tcrm1095.tfm" 1699688820 1536 02c06700a42be0f5a28664c7273f82e7 ""
@@ -38,6 +38,7 @@
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/base/article.cls" 1699689619 20144 fbcf51733730d8f1a62143512ff5b1fe ""
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/base/size11.clo" 1699689619 8464 a4a9a859b7fd5b6c1450673c4d301348 ""
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty" 1699688889 13886 d1306dcf79a944f6988e688c1785f9ce ""
+  "d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/float/float.sty" 1699689047 6749 16d2656a1984957e674b149555f1ea1d ""
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/geometry/geometry.sty" 1699689159 41601 9cf6c5257b1bc7af01a58859749dd37a ""
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics-cfg/graphics.cfg" 1699689241 1224 978390e9c2234eab29404bc21b268d1e ""
   "d:/CS Dev/Packages/texlive/2023/texmf-dist/tex/latex/graphics-def/pdftex.def" 1699689241 19448 1e988b341dda20961a6b931bcde55519 ""
@@ -52,9 +53,9 @@
   "d:/CS Dev/Packages/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1699691616 4753735 ec3f831be28f471f9c211b19e3cca41d ""
   "d:/CS Dev/Packages/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1699691744 8213354 5b3587a66de0726c18c5608e79b0edf2 ""
   "d:/CS Dev/Packages/texlive/2023/texmf.cnf" 1699691595 713 e69b156964470283e0530f5060668171 ""
-  "d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup/project3_writeup.tex" 1703033022 20685 8387a1395c8a5efe6162c30dcffc0dfc ""
-  "project3_writeup.aux" 1703033027 1201 b022304f4afc29d680f0660a265cd344 "pdflatex"
-  "project3_writeup.tex" 1703033022 20685 8387a1395c8a5efe6162c30dcffc0dfc ""
+  "d:/Rutgers/4-1/Academic/Intro to AI/Projects/Project 3/project-3/Writeup/project3_writeup.tex" 1703068163 34267 3474ae5b99abe50b4bd3f53c88a75e75 ""
+  "project3_writeup.aux" 1703068163 1548 feaffaa37fc1cd62381bd5061d3b5e07 "pdflatex"
+  "project3_writeup.tex" 1703068163 34267 3474ae5b99abe50b4bd3f53c88a75e75 ""
   (generated)
   "project3_writeup.aux"
   "project3_writeup.log"

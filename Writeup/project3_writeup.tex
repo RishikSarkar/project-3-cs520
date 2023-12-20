@@ -1,5 +1,6 @@
 \documentclass[11pt]{article}
 \usepackage[tmargin=1in,lmargin=1in,rmargin=1in,bmargin=1.2in]{geometry}
+\usepackage{float}
 
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{0.25em}
@@ -151,15 +152,127 @@ To map from the input to the output, we considered a multiclass logistic regress
     This ensures that the probability is distributed over the 5 possible moves
     \item Bonus:
     \begin{itemize}
-        \item For our bonus, we used the scikit-learn \emph{LogisticRegression} library to create a multiclass model using a \emph{saga} (Stochastic Average Gradient Augmented) solver due to the extensive training dataset. We used the same dataset as the logistic regression model we built from scratch. We used 1000 iterations in our training, and all the other processes were identical unless noted otherwise
+        \item For our bonus, we used the scikit-learn \emph{LogisticRegression} library to create a multiclass model using a \emph{saga} (Stochastic Average Gradient Augmented) solver due to the extensive training dataset. The scikit-learn model also uses the softmax activation function I mentioned earlier and uses L2 regularization to prevent overfitting (which we shall go into more detail about in the next section). We used the same dataset as the logistic regression model we built from scratch. We used 1000 iterations in our training, and all the other processes were identical unless noted otherwise
     \end{itemize}
 \end{enumerate}
 
 \subsubsection{Loss}
 
+As a multiclass classification model, Model 1 uses a cross-entropy loss function that measures the difference between the true and predicted probability distributions for the classes in the following way:
+
+\begin{enumerate}
+    \item As parameters, we input the predicted \emph{chosen\_action} vector and the true \emph{chosen\_action} vector as well as the validity mask that, as mentioned in Section 1.1, is one-hot-encoded to depict the valid moves for the bot
+    \item At first, the validity mask vector is element-wise multiplied by the predicted probability vector $\hat{y}$. This operation is done so that the probabilities for invalid bot moves become 0. Then, the probabilities in $\hat{y}$ are normalized, so the sum remains 1. This process is crucial since it aligns the learning process of Model 1 with the constraints imposed by the simulation
+    \item After that, the cross-entropy loss is calculated for each one-hot-encoded datapoint (with five classes) in true output vector $y$ and predicted output vector $\hat{y}$ by using the following equation:
+    \begin{itemize}
+        \item $L(y, \hat{y}) = - \Sigma_{i=1}^{5} y_i \cdot log(\hat{y_i} + \epsilon)$
+        \item In this case, $\epsilon$ refers to a small constant (1e-15) to ensure that log(0) is not being calculated, and $L(y,\hat{y})$ is the loss for that particular datapoint
+    \end{itemize}
+    \item Finally, the loss for each datapoint is added up and averaged (divided by n, where n is the number of datapoints). Since the calculations take place for the entire vectors at once, this operation is implicit
+    \item Bonus:
+    \begin{itemize}
+        \item We did not define the loss function explicitly since we used the default scikit-learn \emph{LogisticRegression} library. However, as mentioned earlier, we used L2 regularization, which, as I understand it, added a penalty to the loss function equal to the sum of the squared values of the calculated weights with a specific regularization strength. Additionally, we used L2 over L1 regularization because we found through research that L1 is better for feature selection, but since we already have very few features (after reducing the original 1,219 features to 23), L2 seemed to be a better fit for the use case
+        \item Note that because we could not figure out how to account for one-hot-encoded output vectors within scikit-learn, we were forced to use integer representations for each output class (based on the index in the one-hot-encoding). For example, up = 0, down = 1, and so on. We were also unable to apply the validity mask during loss calculations, instead opting to use it only during the simulation
+    \end{itemize}
+\end{enumerate}
+
 \subsubsection{Training Algorithm}
 
+The training algorithm for Model 1 uses gradient descent to minimize the cross-entropy loss function. The algorithm iteratively updates the weights and biases to yield the lowest possible loss value. Here are the steps we followed to implement it:
+
+\begin{enumerate}
+    \item As parameters, we input the predicted output vector $\hat{y}$, the true output vector $y$, the input matrix $X$, as well as the validity mask mentioned earlier
+    \item Similar to the loss function, we first multiply the validity mask vector by the predicted probability vector $\hat{y}$ to reduce invalid moves to 0 and then subsequently normalize the valid probabilities so that the sum is 1
+    \item Then we calculate the gradient of the loss function with respect to the weights $W$ and bias $b$ as follows:
+    \begin{itemize}
+        \item $\nabla_{W} L = \frac{1}{n} X^{T} \cdot (\hat{y} - y)$
+        \item $\nabla_{b} L = \frac{1}{n} \Sigma_{i=1}^{n} (\hat{y_i} - y_i)$
+    \end{itemize}
+    In this case, $X$ is the input matrix of size $n \times m$, and $\hat{y}$ and $y$ are the predicted and true output vectors of size $n \times 5$ (since there are five classes in the one-hot-encoding). Additionally, $L$ is the loss function that was calculated earlier
+    \item Finally, after we have calculated the gradient of the loss function with respect to both $W$ and $b$, we can use them to update the weights and bias in the following way:
+    \begin{itemize}
+        \item $W = W - \alpha \cdot \nabla_{W} L$
+        \item $b = b - \alpha \cdot \nabla_{b} L$
+    \end{itemize}
+    The $\alpha$ used in these updates refers to the learning rate of the training algorithm (which we set to 0.01) for our final training. We tested out with several $\alpha$ values and found that smaller values led to much slower convergence, whereas larger values made the loss oscillate instead of steadily decreasing sometimes (indicating that the updates were overstepping and missing the minimum)
+    \item We utilized this algorithm in each iteration or epoch to train the model on the entire dataset. We previously tried out stochastic gradient descent by updating the parameters for smaller batch sizes to improve convergence speed (later switching to regular gradient descent after a specified loss difference threshold). However, we realized that the loss function decreased more steadily by utilizing full-batch gradient descent the entire time. Overall, we finally trained Model 1 for a total of around 50 epochs, which allowed the loss to decrease and eventually become asymptotic
+    \item Bonus:
+    \begin{itemize}
+        \item Once again, we did not explicitly define the training function since we used the default scikit-learn \emph{LogisticRegression} library. As mentioned earlier, we utilized \emph{saga}, or Stochastic Average Gradient Descent, which uses the same process defined earlier, albeit much more efficiently, for faster convergence. Additionally, we set the total number of epochs to 1000 to ensure loss convergence
+    \end{itemize}
+\end{enumerate}
+
 \subsection{Testing Process and Results}
+
+This section will highlight our training, testing, and simulation results and an overall analysis of our findings.
+
+\subsubsection{Results}
+
+Here are a few of the loss function plots we generated during training:
+
+\begin{itemize}
+    \item Figure 1 shows the decrease in the loss function using Stochastic Gradient Descent. Notice that the initial loss was very high, and despite decreasing steadily, showed minor improvement in accuracy
+
+% \begin{figure}[H]
+%     \centering
+    % \includegraphics[width=0.8\linewidth]{loss_sgd.png}
+%     \caption{Loss Function using SGD}
+% \end{figure}
+    
+    \item Figure 2 shows the problem of using a higher $\alpha$ value of 0.1. The loss function continuously fluctuated due to overstepping the minimum, and the model did not learn
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{loss_highalpha.png}
+%     \caption{Loss Function with alpha=0.1}
+% \end{figure}
+    
+    \item Figure 3 shows the final loss function we achieved through training Model 1. The loss decreases and gradually becomes asymptotic, indicating that the model was learning over time. Despite the apparent improvement in accuracy and decreased loss, we noticed the loss value was exceptionally low (even though further testing showed no indication of the model memorizing features). We found this very confusing and eventually realized that this was because our feature values were mostly sparse with many 0s, so the model was learning as much as it could, given the data. We tried training the model on the dataset with 1,219 features and the ones after PCA and variance threshold filtering but did not see a difference in the calculated loss. Overall, as we shall depict in the following section, we tested the model's accuracy using trained and random weights and biases and saw that the model learned adequately, so the abnormally low loss value did not affect Model 1 negatively
+\end{itemize}
+
+% \begin{figure}[H]
+%     \centering
+%     \includegraphics[width=0.8\linewidth]{loss1.png}
+%     \caption{Final Loss Function}
+% \end{figure}
+
+\subsubsection{Testing and Evaluation}
+
+After training the model on 50 epochs and ensuring that the loss function had decreased sufficiently, we tested Model 1 on the training and test datasets containing 1,429,898 and 357,475 datapoints respectively. Here are our findings using the \emph{predict\_constrained()} function that applies the validity mask to the predicted probabilities and returns the move class with the maximum probability:
+
+\begin{itemize}
+    \item Training Accuracy: 0.7017115906169531
+    \item Testing Accuracy: 0.7074145045108049
+\end{itemize}
+
+Now, this might not initially seem like a lot and begs the question: what if the model randomly predicts outputs instead of having learned the optimal weights? To counter this argument, we devised an algorithm to generate 100 random weight and bias vectors and calculate the testing accuracy using each parameter pair. We then found the maximum and minimum testing accuracies from the test and compared them to the testing accuracy of the learned parameters:
+
+\begin{itemize}
+    \item Maximum Random Testing Accuracy: 0.4941895237429191
+    \item Minimum Random Testing Accuracy: 0.4485997622211344
+\end{itemize}
+
+Since 0.707 $>$ 0.494, the maximum random testing accuracy over 100 trials, we can affirm with reasonable certainty that Model 1 has indeed learned optimal weights and biases over the training period.
+
+Now, what about whether the model is overfitting or not? Firstly, we have shown that the training and testing accuracy are virtually identical (with the testing accuracy being slightly higher). This finding indicates that the model has not overfitted the training dataset since it performs just as well on the testing dataset. Since the datasets themselves are quite large, we should be able to confirm that the model does not overfit significantly.
+
+However, what if the model has just memorized the bot location features and often predicts the same output since the board configuration was relatively homogenous over the same simulation trial we used to collect data? To answer this question, we tried generating five other test datasets with randomized board start states (in terms of bot, alien, and crew locations) and got similar accuracy values to the training accuracy we found with the original dataset. For example, one of our testing datasets returned an accuracy of 0.7146513365126948, even higher than the testing accuracy on the original dataset. None of our testing datasets returned a lower accuracy than the training accuracy, indicating that the model was not overfitting much and is reasonably generalizable.
+
+\subsubsection{Bot1 vs. Mimic-Bot1}
+
+In this section, we will talk about some specific setups of the Mimic-Bot1 simulation function (along with helper functions) and evaluate the overall performance of Model 1 in practice:
+
+\begin{itemize}
+    \item Our Mimic-Bot1 function was almost identical to the Bot1 function defined in Project 2 (and the data collection function defined earlier), but the main difference was the algorithm to predict the next move for the bot given a ship state. Within Bot1, the prediction occurs deterministically, using the logic-based function defined in Project 2 that returns the highest probability neighbor with a 0 alien probability. However, for Mimic-Bot1, the prediction function takes in as parameters the features used in training Model 1 and outputs the model's prediction in the form of a tuple reflecting the best next move
+    \item The best-move-finding function initially utilized the \emph{predict\_constrained()} function defined earlier that applies the validity mask to Model 1's predictions based on the input X and returns the highest probability valid neighbor. However, as mentioned earlier, we modified this approach slightly to incorporate a stochastic element in move prediction to avoid endless loops by the bot in some specific scenarios
+    \item In the evaluation, we used the same three metrics in Project 2: Average Rescue Moves, Probability of Crew Rescue, and Average Crew Saved. For the hyperparameters, we used the same values as the data collection function: alpha = 0.004, k = 3, timeout = 10,000, with 400 bots for both Bot1 and Mimic-Bot1
+    \item Overall, Mimic-Bot1 performed similarly to Bot1 sometimes but was sometimes worse. Here are the results we collected over the span of 20 trials (each containing the average metrics for 20 bots for Bot1 and Mimic-Bot1):
+    \begin{itemize}
+        \item Bot1: {Average Rescue Moves: [627.05]}, {Probability of Crew Rescue: [0.73]}, {Average Crew Saved: [14.6]}
+        \item Mimic-Bot1: Bot1: {Average Rescue Moves: [1768.05]}, {Probability of Crew Rescue: [0.42]}, {Average Crew Saved: [8.4]}
+    \end{itemize}
+    \item These results suggest that, on average, Bot1 performed significantly better than Mimic-Bot1, but Model 1's predictions weren't completely useless. The large average number of required moves for rescues directly affected the loops that the mimic bot often found itself in, which weren't wholly mitigated despite the addition of stochasticity. Mimic-Bot1 was limited in performance to Bot1's capability since Model1 was trained on simulations using Bot1 itself. Overall, Mimic-Bot1 displayed the ability to traverse the ship effectively and rescue crew members while avoiding aliens, albeit not as well as its deterministic counterpart
+\end{itemize}
 
 \section{Model 2}
 
