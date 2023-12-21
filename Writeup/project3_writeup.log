@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.11)  20 DEC 2023 16:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.11.11)  21 DEC 2023 00:35
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -164,44 +164,99 @@ Overfull \hbox (6.62094pt too wide) in paragraph at lines 115--116
 <loss_sgd.png, id=42, 722.7pt x 433.62pt>
 File: loss_sgd.png Graphic file (type png)
 <use loss_sgd.png>
-Package pdftex.def Info: loss_sgd.png  used on input line 219.
+Package pdftex.def Info: loss_sgd.png  used on input line 218.
 (pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
  [9]
 <loss_highalpha.png, id=47, 722.7pt x 433.62pt>
 File: loss_highalpha.png Graphic file (type png)
 <use loss_highalpha.png>
-Package pdftex.def Info: loss_highalpha.png  used on input line 227.
+Package pdftex.def Info: loss_highalpha.png  used on input line 226.
 (pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
  [10 <./loss_sgd.png> <./loss_highalpha.png>]
 <loss1.png, id=53, 722.7pt x 433.62pt>
 File: loss1.png Graphic file (type png)
 <use loss1.png>
-Package pdftex.def Info: loss1.png  used on input line 236.
+Package pdftex.def Info: loss1.png  used on input line 235.
 (pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
- [11 <./loss1.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 260--261
-
+ [11 <./loss1.png>] [12] [13] [14] [15] [16] [17] [18]
+<loss_m2highalpha.png, id=82, 722.7pt x 433.62pt>
+File: loss_m2highalpha.png Graphic file (type png)
+<use loss_m2highalpha.png>
+Package pdftex.def Info: loss_m2highalpha.png  used on input line 423.
+(pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
+ [19]
+<loss_m2final.png, id=87, 722.7pt x 433.62pt>
+File: loss_m2final.png Graphic file (type png)
+<use loss_m2final.png>
+Package pdftex.def Info: loss_m2final.png  used on input line 430.
+(pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
+ [20 <./loss_m2highalpha.png> <./loss_m2final.png>] [21]
+Overfull \hbox (10.04678pt too wide) in paragraph at lines 459--460
+[]\OT1/cmr/m/n/10.95 Import rel-e-vant pack-ages and en-sure that the dataset used to train Model 1 (\OT1/cmr/m/it/10.95 model[]data[]raw.csv\OT1/cmr/m/n/10.95 )
  []
 
-[12] [13] (./project3_writeup.aux)
+[22] [23]
+Overfull \hbox (6.62094pt too wide) in paragraph at lines 510--511
+\OT1/cmr/m/it/10.95 d[]alien[]right\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]alien[]stay\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]up\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]down\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]left\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]right\OT1/cmr/m/n/10.95 , \OT1/cmr/m/it/10.95 d[]crew[]stay \OT1/cmr/m/n/10.95 stored
+ []
+
+[24] [25] [26] [27] [28] [29]
+<criticloss.png, id=121, 409.7709pt x 327.3831pt>
+File: criticloss.png Graphic file (type png)
+<use criticloss.png>
+Package pdftex.def Info: criticloss.png  used on input line 686.
+(pdftex.def)             Requested size: 187.89914pt x 150.11848pt.
+<criticloss2.png, id=122, 409.7709pt x 327.3831pt>
+File: criticloss2.png Graphic file (type png)
+<use criticloss2.png>
+Package pdftex.def Info: criticloss2.png  used on input line 692.
+(pdftex.def)             Requested size: 187.89914pt x 150.11848pt.
+<actorloss.png, id=123, 409.7709pt x 327.3831pt>
+File: actorloss.png Graphic file (type png)
+<use actorloss.png>
+Package pdftex.def Info: actorloss.png  used on input line 702.
+(pdftex.def)             Requested size: 187.89914pt x 150.11848pt.
+ [30 <./criticloss.png> <./criticloss2.png>]
+<actorloss2.png, id=129, 416.2752pt x 327.3831pt>
+File: actorloss2.png Graphic file (type png)
+<use actorloss2.png>
+Package pdftex.def Info: actorloss2.png  used on input line 708.
+(pdftex.def)             Requested size: 187.89914pt x 147.77562pt.
+<actormoves.png, id=130, 722.7pt x 433.62pt>
+File: actormoves.png Graphic file (type png)
+<use actormoves.png>
+Package pdftex.def Info: actormoves.png  used on input line 718.
+(pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
+ [31 <./actorloss.png> <./actorloss2.png>]
+<actorprob.png, id=137, 722.7pt x 433.62pt>
+File: actorprob.png Graphic file (type png)
+<use actorprob.png>
+Package pdftex.def Info: actorprob.png  used on input line 726.
+(pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
+<actorcount.png, id=138, 722.7pt x 433.62pt>
+File: actorcount.png Graphic file (type png)
+<use actorcount.png>
+Package pdftex.def Info: actorcount.png  used on input line 734.
+(pdftex.def)             Requested size: 375.80544pt x 225.48369pt.
+ [32 <./actormoves.png> <./actorprob.png>] [33 <./actorcount.png>] [34] (./project3_writeup.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-11-01>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 2005 strings out of 474272
- 33123 string characters out of 5743465
+ 2068 strings out of 474272
+ 34486 string characters out of 5743465
  1934533 words of memory out of 5000000
- 24224 multiletter control sequences out of 15000+600000
+ 24287 multiletter control sequences out of 15000+600000
  563927 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,6n,65p,1105b,329s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on project3_writeup.pdf (13 pages, 297533 bytes).
+ 57i,7n,65p,1213b,329s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb><d:/CS Dev/Packages/texlive/2023/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
+Output written on project3_writeup.pdf (34 pages, 576603 bytes).
 PDF statistics:
- 125 PDF objects out of 1000 (max. 8388607)
- 75 compressed objects within 1 object stream
+ 220 PDF objects out of 1000 (max. 8388607)
+ 126 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 61 words of extra memory for PDF output out of 10000 (max. 10000000)
 

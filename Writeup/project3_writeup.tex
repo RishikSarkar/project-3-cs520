@@ -213,28 +213,28 @@ Here are a few of the loss function plots we generated during training:
 \begin{itemize}
     \item Figure 1 shows the decrease in the loss function using Stochastic Gradient Descent. Notice that the initial loss was very high, and despite decreasing steadily, showed minor improvement in accuracy
 
-% \begin{figure}[H]
-%     \centering
-    % \includegraphics[width=0.8\linewidth]{loss_sgd.png}
-%     \caption{Loss Function using SGD}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{loss_sgd.png}
+    \caption{Loss Function using SGD}
+\end{figure}
     
     \item Figure 2 shows the problem of using a higher $\alpha$ value of 0.1. The loss function continuously fluctuated due to overstepping the minimum, and the model did not learn
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\linewidth]{loss_highalpha.png}
-%     \caption{Loss Function with alpha=0.1}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{loss_highalpha.png}
+    \caption{Loss Function with alpha=0.1}
+\end{figure}
     
     \item Figure 3 shows the final loss function we achieved through training Model 1. The loss decreases and gradually becomes asymptotic, indicating that the model was learning over time. Despite the apparent improvement in accuracy and decreased loss, we noticed the loss value was exceptionally low (even though further testing showed no indication of the model memorizing features). We found this very confusing and eventually realized that this was because our feature values were mostly sparse with many 0s, so the model was learning as much as it could, given the data. We tried training the model on the dataset with 1,219 features and the ones after PCA and variance threshold filtering but did not see a difference in the calculated loss. Overall, as we shall depict in the following section, we tested the model's accuracy using trained and random weights and biases and saw that the model learned adequately, so the abnormally low loss value did not affect Model 1 negatively
 \end{itemize}
 
-% \begin{figure}[H]
-%     \centering
-%     \includegraphics[width=0.8\linewidth]{loss1.png}
-%     \caption{Final Loss Function}
-% \end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{loss1.png}
+    \caption{Final Loss Function}
+\end{figure}
 
 \subsubsection{Testing and Evaluation}
 
@@ -411,6 +411,7 @@ Like Model 1, the training function uses gradient descent to minimize the cross-
     \begin{itemize}
         \item Once again, we did not explicitly define the training function since we used the default scikit-learn \emph{LogisticRegression} library. We utilized \emph{lbfgs}, or Limited-memory Broyden-Fletcher-Goldfarb-Shanno, which uses a similar process but is much more memory-efficient as it is geared for extensive data sets. 
     \end{itemize}
+\end{enumerate}
 \subsection{Testing Process and Results}
 This section is an analysis of the testing process we used and the simulation results we got. 
 \subsubsection{Results}
@@ -445,27 +446,315 @@ To ensure that the model had learned and was not randomly predicting output, we 
 Since the model's testing accuracy is significantly higher in comparison, it can be evaluated that the model has learned optimal weights and bias. 
 
 The result of the testing accuracy of the model being close to the training accuracy shows that the model is not overfitting. To confirm that the bot is not memorizing features and just providing the same output, we ran this model for other test data sets that corresponded with different board start states, like with Model 1. We checked with around 5 different test data sets. For 3 out of the 5 test data sets, the testing accuracy was around the same as the testing accuracy recorded for the original test data set. This leads to the conclusion that the bot is not overfitting and is reasonably capable of learning optimal weights and bias. 
-\end{enumerate}
-% \subsection{Input}
-
-% \subsection{Model}
-
-% \subsection{Training}
-
-% \subsection{Error}
-
-% \subsection{Output}
 
 \section{Model 3}
 
-% \subsection{Input}
+This section is dedicated to our training, testing, and incremental improvement of Model 3, which involves using reinforcement learning with an ACTOR-CRITIC framework to enable the ACTOR to predict the best next move for the bot based on the current grid configuration and the CRITIC's prediction of the move's success rate. The subsections shall include the following essential information: the general pipeline of Model 3, the specifications of ACTOR and the CRITIC networks, a thorough analysis of learning and improvement, and a presentation of the testing process along with any relevant results.
 
-% \subsection{Model}
+\subsection{Model 3 Pipeline}
 
-% \subsection{Training}
+Because we went into great detail on Model 1 and Model 2, Model 3, which can be considered a combination of the two, is not unique in its data collection, preprocessing, and pretraining. Therefore, I have outlined the general pipeline of Model 3 below, along with any specific steps taken:
 
-% \subsection{Error}
+\begin{enumerate}
+    \item Import relevant packages and ensure that the dataset used to train Model 1 (\emph{model\_data\_raw.csv}) has been appropriately configured and loaded for Model 3 as a Pandas dataframe called \emph{pretrain\_data}
+    \item Preprocess the collected pre-training data, similar to Model 1, and perform train/test splits for the input matrix X and output vector y. We also generated a validity mask for the output vector at this pipeline step, but more later. The following general preprocessing steps were taken:
+    \begin{enumerate}
+        \item Read the data from \emph{model\_data\_raw.csv} and ensure that the shape is consistent and the data is loading correctly
+        \item Remove duplicates from the data to streamline the dataset and remove redundancy. Without this step, the model might memorize frequently occurring data points or become skewed/biased. After this step, the total data points are reduced to 1,787,373
+        \item Separate the data into the input matrix X and the output vector y (with the output being the last column and the input being all the other columns). Since we decided to use a PyTorch neural network for ACTOR, we had to slightly modify the output vector to convert the one-hot-encoded lists to integers based on the class indices (similar to the approach in Model 1 Bonus)
+        \item Divide the X and y dataframes into train and test sets with an 80/20 split, respectively, using the scikit-learn \emph{train\_test\_split()} function. At this point, we also checked that all five classes were equally represented in each set
+        \item Then, generate the validity mask vector dataframes for the train and test sets. Each row in the validity mask corresponds to the same row in the X\_pt\_train and X\_pt\_test datasets and represents the neighbors the bot can move to, given the board's open and closed cells. The following process was used to generate this validity mask:
+        \begin{enumerate}
+            \item For any given datapoint, use the bot\_x and bot\_y features (that represent the bot's current coordinates) along with an empty grid state to determine what neighbor cells count as valid moves for the bot
+            \item Each datapoint in the valid dataframes is represented as a boolean list in the form of [$c_1, c_2, c_3, c_4, c_5$] depicting the up, down, left, right, and bot cells, respectively. Each $c_i$ is False if the corresponding relative neighbor is an invalid move and True if the bot can move to it
+        \end{enumerate}
+        \item Finally, convert the X\_pt\_train and X\_pt\_test datasets into float32 tensor matrices and the y\_pt\_train and y\_pt\_test datasets into long tensors to be used in pre-training the ACTOR network
+    \end{enumerate}
+    \item Initialize and pre-train the ACTOR network on the X\_pt\_train + y\_pt\_train tensors to allow it to learn the optimal weights to predict the best moves. We used a learning rate of 0.001. I will go into the input, output, and model spaces, as well as the learning techniques, in the next section
+    \item Import and run the \emph{Bot1.ipynb} notebook to gain access to all the setup functions used for Bot 1 in Project 2 similar to Model 1 and 2. Collect relevant feature and output vectors to save in a Pandas dataframe (and eventually store as \emph{actor\_data.csv} similar to Model 2 to be used in training the CRITIC network. I shall go into more detail about the exact feature and output vectors in the next section.
+    \begin{enumerate}
+        \item To collect enough data, we ran 200 bots (i.e., until the bot saved the crew or got captured): 20 iterations per simulation and 10 simulations
+        \item Through these simulations, we collected a total of over 840,000 data points
+        \item The following hyperparameters were used: alpha = 0.004, k = 3
+        \item Note that these values only reflect the initial simulation for our data collection phase. The \emph{actor\_data.csv} file was constantly updated with new data during our reinforcement learning loops
+        \item Importantly, and as we shall detail in the next section, the data collection loop now stored the best next move as a feature (unlike in Model 1) and instead had the success rate per move as the output vector
+    \end{enumerate}
+    \item Initialize and train the CRITIC network on the \emph{actor\_data.csv} collected using the ACTOR network. I shall discuss the CRITIC framework in more detail shortly, so let me first go into more detail about the ACTOR-CRITIC loop that shall serve as the reinforcement learning phase. The CRITIC and ACTOR training loops are run sequentially within an outer loop, and the following processes take place in each loop:
+    \begin{enumerate}
+        \item The CRITIC loop first takes the existing critic network and Adam optimizer as parameters and generates data based on the predicted moves by the current ACTOR network as \emph{actor\_data.csv}. The data collection takes place over the same hyperparameters and iterations as the original \emph{actor\_data.csv} generation, i.e., 200 bots with alpha = 0.004 and k = 3. Then, it preprocesses the data and trains on it to utilize the updated true success and failure metrics output vector to improve its predictive capabilities. This process is very similar to the training process of Model 2
+        \item The ACTOR loop first generates data based on the predicted moves by the current ACTOR network as \emph{critic\_data.csv}. While this data collection takes place over the same hyperparameters and iterations as the CRITIC loop, it stores the predicted moves as the output vector, similar to Model 1. The process then uses the CRITIC network iteratively on the generated \emph{critic\_data.csv} dataset and replaces the predicted move with the highest-success-rated move predicted by CRITIC based on the input features. Then, the ACTOR network trains on the updated dataset to improve its best move prediction capabilities. Finally, the ACTOR network is evaluated based on its accuracy and loss decrease
+    \end{enumerate}
+    \item Finally, simulate the ACTOR network through a new bot called Mimic-Bot3 that utilizes the network's predictions to determine the next move for the bot by utilizing the same features as the trained model. Here is a general outline of the process:
+    \begin{enumerate}
+        \item Create the Mimic-Bot3 simulation function identical to the Mimic-Bot1 simulation function, predicting the next move at each timestep by using the ACTOR network with a dataframe input containing features extracted from the current ship configuration
+        \item Test the Mimic-Bot3 simulation out against the Bot1 simulation function similar to how the testing was performed for Model 1, and store the collected average metrics for each bot
+        \item We ran 400 bots for both Bot 1 and Mimic-Bot3: 20 iterations per simulation and 20 simulations
+        \item The following hyperparameters were used: alpha = 0.004, k = 3
+        \item Importantly, we calculated a validity mask for every X input, and used a prediction function that applied the validity mask to the output to ensure that the bot would remain within bounds
+        \item Later, we added a stochastic element to the prediction provided by ACTOR. In essence, we generated a random number between 1 and 5 and returned a random valid move if the number was 1 (i.e., 20\% of the time). This modification accounted for situations where Mimic-Bot3 got stuck in an endless loop. Consider the following scenario: The bot is in a cell from which the highest probability neighbor is "up," but following the highest probability from "up," the bot is taken back to the original cell. By adding slight randomness, Mimic-Bot3 can escape such loops by taking unexpected actions
+    \end{enumerate}
+\end{enumerate}
 
-% \subsection{Output}
+\subsection{ACTOR Network}
+
+In this section, I shall outline the specifications for ACTOR, including the neural network architecture, forward and backpropagation techniques, the loss function, parameter updates, and the training, prediction, and testing functions we used.
+
+\subsubsection{Input Space}
+
+The data that was collected and represented as input features for ACTOR's training are almost exactly the same as Model 1:
+
+\begin{enumerate}
+    \item The bot's current x and y coordinates as two individual integer features \emph{bot\_x} and \emph{bot\_y}
+    \item The alien probabilities for all neighboring cells (and the current bot cell) as float32 features. They are in the order: \emph{alien\_up}, \emph{alien\_down}, \emph{alien\_left}, \emph{alien\_right}, \emph{alien\_stay} representing the probabilities of the alien being in the up, down, left, right, and bot cells respectively
+    \item The crew member probabilities for all neighboring cells (and the current bot cell) as float32 features. They are in the order: \emph{crew\_up}, \emph{crew\_down}, \emph{crew\_left}, \emph{crew\_right} representing the probabilities of the crew member being in the up, down, left, and right cells respectively
+    \item Per the professor's announcement, we added features reflecting the distance from the bot's neighboring cells to the two cells with the highest alien and crew member probabilities, respectively. Hence, we included ten additional features: \emph{d\_alien\_up}, \emph{d\_alien\_down}, \emph{d\_alien\_left}, \emph{d\_alien\_right}, \emph{d\_alien\_stay}, \emph{d\_crew\_up}, \emph{d\_crew\_down}, \emph{d\_crew\_left}, \emph{d\_crew\_right}, \emph{d\_crew\_stay} stored as float32 values. We heeded Aravind's announcement on Zulip and made sure that the actual locations for the crew member and alien were not used at any point during this distance calculation process since the maximum probability cell within the crew and alien matrices might not reflect the true locations
+    \item The binary values for whether the bot received a beep or not from the alien sensor and crew sensor as two features: \emph{alien\_detected} and \emph{crew\_detected}
+\end{enumerate}
+
+Overall, ACTOR was continuously trained on 23 distinct features stored as integers and float32 values, as depicted above
+
+\subsubsection{Output Space}
+
+The output space for ACTOR consisted of the best move made by the bot with a given ship configuration, similar to Model 1 Bonus. The moves are encoded as integers as follows: up = 0, down = 1, left = 2, right = 3, stay = 4
+
+\subsubsection{Model Space}
+
+The ACTOR model architecture is defined below:
+
+\begin{itemize}
+    \item The ACTOR model is a PyTorch neural network with three fully-connected layers (one input, one hidden, one output):
+    \begin{enumerate}
+        \item The first layer transforms the input features to a 128-neuron hidden layer using a linear transformation as the weighted sum of the inputs plus the bias vector. Additionally, the ReLU activation function introduces non-linearity to ACTOR, allowing it to learn complex patterns from the data. Essentially, ReLU outputs the input directly if positive and 0 if negative (i.e., $f(x) = \max(0, x)$)
+        \item The second layer reduces the dimension to five, corresponding to each of the output labels depicting possible actions
+        \item The third layer applies the Softmax function to the output layer to convert logits to probabilities and provide a distribution over the possible actions. Essentially, given a logit vector $z$ with five elements, the Softmax function computes:
+        \begin{itemize}
+            \item Softmax($z_i$) = $\frac{e^{z_i}}{\Sigma_{k=1}^5 e^{z_k}}$
+        \end{itemize}
+        This computation is done for each element $z_i$ of the logit vector
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{Loss}
+
+Similar to Model 1, ACTOR uses a cross-entropy loss function that measures the difference between the true and predicted probability distributions for the classes in the following way:
+
+\begin{itemize}
+    \item Given the predicted probability distribution $\hat{y}$ from the Softmax output, where each element of $\hat{y}$ is the predicted probability of each class, the cross-entropy loss for a datapoint is calculated as such:
+    \begin{itemize}
+        \item $L = - log(\hat{y_i})$
+        \item $i$ is the index of the true class label for the datapoint
+    \end{itemize}
+    \item The total loss is then calculated as the average of each of these losses
+\end{itemize}
+
+\subsubsection{Training Algorithm}
+
+The training algorithm for ACTOR involves the following steps:
+
+\begin{enumerate}
+    \item Forward Propagation:
+    \begin{itemize}
+        \item The model receives the input vector X (representing the current state) and computes the output through its layers. The output of each layer is calculated as:
+        \begin{itemize}
+            \item For a layer $l$, the output $O_l$ is given by $O_l = f(W_l \cdot O_{l - 1} + b_l)$
+            \item In this case, $W_l$ and $b_l$ are the calculated weights and biases, $O_{l - 1}$ is the output of the previous layer, and $f$ is the activation function (ReLU for the first layer, and Softmax for the third)
+        \end{itemize}
+    \end{itemize}
+    \item Loss Calculation:
+    \begin{itemize}
+        \item The cross-entropy loss is then calculated using the loss function defined in the previous subsection
+    \end{itemize}
+    \item Backward Propagation:
+    \begin{itemize}
+        \item Then we calculate the gradient of the loss function with respect to the weights $W$ and bias $b$ as follows:
+        \begin{itemize}
+            \item $\nabla_{W} L = \frac{1}{n} X^{T} \cdot (\hat{y} - y)$
+            \item $\nabla_{b} L = \frac{1}{n} \Sigma_{i=1}^{n} (\hat{y_i} - y_i)$
+        \end{itemize}
+        In this case, $X$ is the input matrix of size $n \times m$, and $\hat{y}$ and $y$ are the predicted and true output vectors of size $n \times 1$. Additionally, $L$ is the loss function that was calculated earlier
+    \end{itemize}
+    \item Parameter Update:
+    \begin{itemize}    
+        \item Finally, after the gradient of the loss function with respect to both $W$ and $b$ have been calculated, the model uses them to update the weights and bias in the following way:
+        \begin{itemize}
+            \item $W = W - \alpha \cdot \nabla_{W} L$
+            \item $b = b - \alpha \cdot \nabla_{b} L$
+        \end{itemize}
+        The $\alpha$ used in these updates refers to the learning rate of the training algorithm, which we set to 0.001
+    \end{itemize}
+\end{enumerate}
+
+\subsection{CRITIC Network}
+
+In this section, I shall outline the specifications for CRITIC, including the neural network architecture, forward and backpropagation techniques, the loss function, parameter updates, and the training, prediction, and testing functions we used.
+
+\subsubsection{Input Space}
+
+The data that was collected and represented as input features for CRITIC's training are almost exactly the same as ACTOR, with one major addition:
+
+\begin{enumerate}
+    \item The bot's current x and y coordinates as two individual integer features \emph{bot\_x} and \emph{bot\_y}
+    \item The alien probabilities for all neighboring cells (and the current bot cell) as float32 features. They are in the order: \emph{alien\_up}, \emph{alien\_down}, \emph{alien\_left}, \emph{alien\_right}, \emph{alien\_stay} representing the probabilities of the alien being in the up, down, left, right, and bot cells respectively
+    \item The crew member probabilities for all neighboring cells (and the current bot cell) as float32 features. They are in the order: \emph{crew\_up}, \emph{crew\_down}, \emph{crew\_left}, \emph{crew\_right} representing the probabilities of the crew member being in the up, down, left, and right cells respectively
+    \item Features reflecting the distance from the bot's neighboring cells to the two cells with the highest alien and crew member probabilities, respectively. Hence, we included ten additional features: \emph{d\_alien\_up}, \emph{d\_alien\_down}, \emph{d\_alien\_left}, \emph{d\_alien\_right}, \emph{d\_alien\_stay}, \emph{d\_crew\_up}, \emph{d\_crew\_down}, \emph{d\_crew\_left}, \emph{d\_crew\_right}, \emph{d\_crew\_stay} stored as float32 values. Once again, we heeded Aravind's announcement on Zulip and made sure that the actual locations for the crew member and alien were not used at any point during this distance calculation process since the maximum probability cell within the crew and alien matrices might not reflect the true locations
+    \item The binary values for whether the bot received a beep or not from the alien sensor and crew sensor as two features: \emph{alien\_detected} and \emph{crew\_detected}
+    \item The final input feature was the predicted best move by the ACTOR model, encoded as an integer reflecting the class label as follows: up = 0, down = 1, left = 2, right = 3, stay = 4
+\end{enumerate}
+
+Overall, CRITIC was continuously trained on 24 distinct features stored as integers and float32 values, as depicted above
+
+\subsubsection{Output Space}
+
+The output space for CRITIC consisted of a binary value that indicated whether the state of the bot represented through the 24 input features was part of a successful bot run, similar to Model 2. In other words, a 1 meant that this state of the bot was part of a run where the bot rescued the crew, while a 0 indicated that this state was part of a run where the bot got captured.
+
+\subsubsection{Model Space}
+
+The CRITIC model architecture is defined below:
+
+\begin{itemize}
+    \item The CRITIC model is a PyTorch neural network with three fully-connected layers (one input, one hidden, one output):
+    \begin{enumerate}
+        \item The first layer transforms the input features to a 128-neuron hidden layer using a linear transformation as the weighted sum of the inputs plus the bias vector. The ReLU activation function also introduces non-linearity to CRITIC, allowing it to learn complex patterns from the data. Essentially, ReLU outputs the input directly if positive and 0 if negative (i.e., $f(x) = \max(0, x)$). This layer is structured similarly to ACTOR
+        \item The second layer reduces the dimension to one, corresponding to the output label depicting the success rate. Instead of having two output labels like Model 2, we decided that having one neuron with a threshold to indicate whether the probability represented success or failure would be more appropriate
+        \item The third layer in the CRITIC model applies the Sigmoid function to the output layer. This function maps logits to a range between 0 and 1, aligning with the CRITIC's role of estimating the value of state-action pairs. The sigmoid function is defined mathematically as:
+        \begin{itemize}
+            \item Sigmoid($z$) = $\frac{1}{1 + e^{-z}}$
+        \end{itemize}
+        This formula is applied to the output of the final linear layer. Overall, Sigmoid is suitable for binary outcomes or probability estimation of a single event, fitting the CRITIC's purpose
+    \end{enumerate}
+\end{itemize}
+
+\subsubsection{Loss}
+
+In contrast to the ACTOR model, the CRITIC uses a binary cross-entropy Loss function that measures the difference between the binary true labels and the predicted probabilities.
+
+\begin{itemize}
+    \item Given the predicted probability vector $\hat{y}$ from the Sigmoid output, the binary cross-entropy loss for a datapoint is calculated as such:
+    \begin{itemize}
+        \item $L = - (y \cdot log(\hat{y}) + (1 - y) \cdot log(1 - \hat{y}))$
+    \end{itemize}
+    \item The total loss is then calculated as the average of each of these losses
+\end{itemize}
+
+\subsubsection{Training Algorithm}
+
+The training algorithm for CRITIC involves the following steps:
+
+\begin{enumerate}
+    \item Forward Propagation:
+    \begin{itemize}
+        \item The model receives the input vector X (representing the current state) and computes the output through its layers. The output of each layer is calculated as:
+        \begin{itemize}
+            \item For a layer $l$, the output $O_l$ is given by $O_l = f(W_l \cdot O_{l - 1} + b_l)$
+            \item In this case, $W_l$ and $b_l$ are the calculated weights and biases, $O_{l - 1}$ is the output of the previous layer, and $f$ is the activation function (ReLU for the first layer, and Sigmoid for the third)
+        \end{itemize}
+    \end{itemize}
+    \item Loss Calculation:
+    \begin{itemize}
+        \item The binary cross-entropy loss is then calculated using the loss function defined in the previous subsection
+    \end{itemize}
+    \item Backward Propagation:
+    \begin{itemize}
+        \item Then we calculate the gradient of the loss function with respect to the weights $W$ and bias $b$ as follows:
+        \begin{itemize}
+            \item $\nabla_{W} L = \frac{1}{n} X^{T} \cdot (\hat{y} - y)$
+            \item $\nabla_{b} L = \frac{1}{n} \Sigma_{i=1}^{n} (\hat{y_i} - y_i)$
+        \end{itemize}
+        In this case, $X$ is the input matrix of size $n \times m$, and $\hat{y}$ and $y$ are the predicted and true output vectors of size $n \times 1$. Additionally, $L$ is the loss function that was calculated earlier
+    \end{itemize}
+    \item Parameter Update:
+    \begin{itemize}    
+        \item Finally, after the gradient of the loss function with respect to both $W$ and $b$ have been calculated, the model uses them to update the weights and bias in the following way:
+        \begin{itemize}
+            \item $W = W - \alpha \cdot \nabla_{W} L$
+            \item $b = b - \alpha \cdot \nabla_{b} L$
+        \end{itemize}
+        The $\alpha$ used in these updates refers to the learning rate of the training algorithm, which we set to 0.001
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Reinforcement Learning}
+
+This section will present the findings from the reinforcement learning loop, including evidence that the CRITIC and ACTOR models learned through training.
+
+\subsubsection{CRITIC Loop}
+
+As explained earlier, the CRITIC loop generates data leveraging the ACTOR network's predictive capabilities and then trains the CRITIC network. Throughout our 20 iterations of reinforcement learning, we observed that the CRITIC network was continuously able to learn from the data and update its weights and biases, and we verified this improvement via loss-decrease plots. For the sake of space, we shall not include each plot, but here are two of them taken during the first and final iterations:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{criticloss.png}
+    \caption{CRITIC Loss Decrease (i=1)}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{criticloss2.png}
+    \caption{CRITIC Loss Decrease (i=20)}
+\end{figure}
+
+\subsubsection{ACTOR Loop}
+
+Similarly, the ACTOR loop generates data leveraging the ACTOR network's predictive capabilities and then uses the CRITIC network's predictions to optimize the dataset, which it subsequently trains on. Throughout our 20 iterations of reinforcement learning, we observed that the ACTOR network was also continuously able to learn from the data and update its weights and biases, and we verified this improvement via loss-decrease plots. For the sake of space, we shall not include each plot, but here are two of them taken during the first and final iterations:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{actorloss.png}
+    \caption{ACTOR Loss Decrease (i=1)}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.4\linewidth]{actorloss2.png}
+    \caption{ACTOR Loss Decrease (i=20)}
+\end{figure}
+
+\subsubsection{ACTOR Improvement}
+
+After every reinforcement learning iteration, we compared the metrics collected from simulating the ACTOR network during data collection and generated plots to verify ACTOR improvement:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{actormoves.png}
+    \caption{ACTOR Average Rescue Moves}
+\end{figure}
+
+This figure clearly shows the ACTOR's performance increasing in terms of the number of moves needed to rescue the crew member over the 20 training sessions
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{actorprob.png}
+    \caption{ACTOR Probability of Crew Rescue}
+\end{figure}
+
+Similarly, this figure clearly shows that the ACTOR gradually had a higher probability of crew rescue over the 20 training sessions
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{actorcount.png}
+    \caption{ACTOR Average Crew Saved}
+\end{figure}
+
+Finally, we can also see that the ACTOR gradually saves more crew members per simulation due to reinforcement learning
+
+\subsection{Testing Process and Results}
+
+This section will highlight our simulation results and an overall analysis of our findings.
+
+\subsubsection{Bot1 vs. Mimic-Bot3}
+
+In this section, we will talk about some specific setups of the Mimic-Bot3 simulation function and evaluate the overall performance of ACTOR in practice:
+
+\begin{itemize}
+    \item Our Mimic-Bot3 function was almost identical to the Mimic-Bot1 function defined for Model 1, and the only difference was the algorithm to predict the next move for the bot given a ship state. Similar to the pre-training data generation simulation, we used a prediction function for the PyTorch neural network (with an applied validity mask) that returned the best next move
+    \item As mentioned earlier, we also modified this approach slightly to incorporate a stochastic element in move prediction to avoid endless loops by the bot in some specific scenarios
+    \item In the evaluation, we used the same three metrics in Model 1: Average Rescue Moves, Probability of Crew Rescue, and Average Crew Saved. For the hyperparameters, we used the same values as the data collection function: alpha = 0.004, k = 3, timeout = 10,000, with 400 bots for both Bot1 and Mimic-Bot3
+    \item Overall, Mimic-Bot3 performed similarly to Bot1. Here are the results we collected over the span of 20 trials (each containing the average metrics for 20 bots for Bot1 and Mimic-Bot3):
+    \begin{itemize}
+        \item Bot1: {Average Rescue Moves: [733.34]}, {Probability of Crew Rescue: [0.69]}, {Average Crew Saved: [13.8]}
+        \item Mimic-Bot3: {Average Rescue Moves: [835.26]}, {Probability of Crew Rescue: [0.66]}, {Average Crew Saved: [13.2]}
+    \end{itemize}
+    \item These results suggest that, on average, although Mimic-Bot3 significantly outperformed Mimic-Bot1, it unfortunately did not perform better than Bot1. However, given more time, we are confident that it would be possible to find the optimal features, hyperparameters, and model architectures to defeat Bot1 once and for all!
+\end{itemize}
 
 \end{document}
